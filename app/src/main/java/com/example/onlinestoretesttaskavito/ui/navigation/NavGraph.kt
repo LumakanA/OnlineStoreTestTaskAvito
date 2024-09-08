@@ -4,6 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.onlinestoretesttaskavito.ui.screen.login.LoginScreen
+import com.example.onlinestoretesttaskavito.ui.screen.login.LoginViewModel
+import com.example.onlinestoretesttaskavito.ui.screen.registration.RegistrationScreen
+import com.example.onlinestoretesttaskavito.ui.screen.registration.RegistrationViewModel
 
 @Composable
 fun NavGraph(
@@ -15,10 +19,10 @@ fun NavGraph(
         startDestination = startScreen
     ) {
         composable(ScreenRouts.RegistrationScreen.route) {
-//            RegistrationScreen()
+            RegistrationScreen(vm = RegistrationViewModel(), navController = navHostController)
         }
         composable(ScreenRouts.LoginScreen.route) {
-//            LoginScreen()
+            LoginScreen(vm = LoginViewModel(), navController = navHostController)
         }
     }
 }

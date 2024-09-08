@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">OnlineStoreTestTaskAvito</string>
+    <string name="search">Поиск</string>
+    <string name="favorites">Избранное</string>
+    <string name="ads">Объявления</string>
+    <string name="messages">Сообщения</string>
+    <string name="profile">Профиль</string>
+    <string name="password">Пароль</string>
+    <string name="registration">Регистрация</string>
+    <string name="name">Имя</string>
+    <string name="email">Электронная почта</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="login">Войти</string>
+    <string name="phone_or_email">Телефон или почта</string>
+    <string name="log">Вход</string>
 </resources>
