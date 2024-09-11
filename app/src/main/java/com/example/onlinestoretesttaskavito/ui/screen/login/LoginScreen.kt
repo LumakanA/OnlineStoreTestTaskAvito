@@ -12,14 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,8 +29,10 @@ import com.example.onlinestoretesttaskavito.ui.components.AppButton
 import com.example.onlinestoretesttaskavito.ui.components.AppTextField
 import com.example.onlinestoretesttaskavito.ui.navigation.ScreenRouts
 import com.example.onlinestoretesttaskavito.ui.theme.BackgroundColor
+import com.example.onlinestoretesttaskavito.ui.theme.ButtonColorWhite
 import com.example.onlinestoretesttaskavito.ui.theme.White
 import com.example.onlinestoretesttaskavito.ui.theme.defaultTextStyle
+import org.koin.androidx.compose.koinViewModel
 
 private val DefaultStartPadding = 25.dp
 private val DefaultTopTextPadding = 20.dp
@@ -41,93 +42,97 @@ fun LoginScreen(
     vm: LoginViewModel,
     navController: NavController
 ) {
-    val state = vm.state
 
-    LaunchedEffect(state.error) {
-        if (state.error == "true") {
+    val state by vm.state.collectAsState()
+
+    LoginContent(
+        state = state,
+        onAction = vm::onAction,
+        navController = navController
+    )
+}
+
+@Composable
+fun LoginContent(
+    state: LoginState,
+    onAction: (LoginViewAction) -> Unit = {},
+    navController: NavController
+) {
+
+    LaunchedEffect(state.isNavigate) {
+        if (state.isNavigate) {
             navController.navigate(ScreenRouts.RegistrationScreen.route)
         }
     }
 
-    if (state.error != null && state.error != "true") {
+    if (state.error != null) {
         AlertDialog(
-            onDismissRequest = { vm.dismissError() },
-            title = { Text(text = "An error occurred") },
-            text = { Text(text = state.error.toString()) },
+            onDismissRequest = { onAction(LoginViewAction.DismissError) },
+            title = { Text(text = stringResource(R.string.an_error_occurred)) },
+            text = { Text(text = state.error) },
             confirmButton = {
-                Button(onClick = { vm.dismissError() }) {
-                    Text(text = "Ok")
+                Button(onClick = { onAction(LoginViewAction.DismissError) }) {
+                    Text(text = stringResource(R.string.ok))
                 }
             }
         )
     }
 
     Scaffold { containerPadding ->
-        if (!state.isLoading) {
-            Box(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackgroundColor)
+                .padding(containerPadding)
+        ) {
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(BackgroundColor)
-                    .padding(containerPadding)
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .padding(start = DefaultStartPadding, end = DefaultStartPadding)
+                    .verticalScroll(rememberScrollState())
             ) {
-                Column(
+                Text(
+                    modifier = Modifier.padding(top = 50.dp),
+                    text = stringResource(R.string.log),
+                    style = defaultTextStyle.textStyle4.copy(color = White),
+                )
+                AppTextField(
                     modifier = Modifier
-                        .fillMaxHeight()
                         .fillMaxWidth()
-                        .padding(start = DefaultStartPadding, end = DefaultStartPadding)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Text(
-                        modifier = Modifier.padding(top = 50.dp),
-                        text = stringResource(R.string.login),
-                        style = defaultTextStyle.textStyle4.copy(color = White),
-                    )
-                    AppTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = DefaultTopTextPadding),
-                        value = state.email,
-                        onValueChange = { newEmail ->
-                            vm.updateEmail(newEmail)
-                        },
-                        hintText = stringResource(R.string.phone_or_email),
-                    )
-                    AppTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = DefaultTopTextPadding),
-                        value = state.password,
-                        onValueChange = { newPassword ->
-                            vm.updatePassword(newPassword)
-                        },
-                        isPassword = true,
-                        hintText = stringResource(R.string.password),
-                    )
+                        .padding(top = DefaultTopTextPadding),
+                    value = state.email,
+                    onValueChange = {
+                        onAction(LoginViewAction.UpdateEmail(it))
+                    },
+                    hintText = stringResource(R.string.phone_or_email),
+                )
+                AppTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = DefaultTopTextPadding),
+                    value = state.password,
+                    onValueChange = {
+                        onAction(LoginViewAction.UpdatePassword(it))
+                    },
+                    isPassword = true,
+                    hintText = stringResource(R.string.password),
+                )
 
-                    Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
 
-                    AppButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 100.dp),
-                        text = stringResource(R.string.log),
-                        buttonEnabled = state.buttonEnabled,
-                        onClick = {
-                            //     if (state.buttonEnabled) vm.signUp()
-                        },
-                        backgroundColor = White
-                    )
-                }
-            }
-
-        } else {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
-                CircularProgressIndicator()
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 100.dp),
+                    text = stringResource(R.string.log),
+                    enabled = state.buttonEnabled,
+                    onClick = {
+                        onAction(LoginViewAction.Login)
+                    },
+                    backgroundColor = ButtonColorWhite,
+                    loading = state.isLoading
+                )
             }
         }
     }
@@ -138,7 +143,7 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     LoginScreen(
-        vm = LoginViewModel(),
+        vm = koinViewModel(),
         navController = rememberNavController()
     )
 }

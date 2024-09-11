@@ -9,14 +9,15 @@ import com.example.onlinestoretesttaskavito.data.KeyValueStorage
 import com.example.onlinestoretesttaskavito.ui.navigation.NavGraph
 import com.example.onlinestoretesttaskavito.ui.navigation.ScreenRouts
 import com.example.onlinestoretesttaskavito.ui.theme.OnlineStoreTestTaskAvitoTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+    private val storage: KeyValueStorage by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContent {
             val navController = rememberNavController()
-            val storage = KeyValueStorage(this)
             OnlineStoreTestTaskAvitoTheme {
                 NavGraph(
                     navHostController = navController, startScreen =

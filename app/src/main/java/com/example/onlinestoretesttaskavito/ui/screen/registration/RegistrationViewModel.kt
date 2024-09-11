@@ -1,112 +1,122 @@
 package com.example.onlinestoretesttaskavito.ui.screen.registration
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import android.util.Log
+import androidx.lifecycle.viewModelScope
+import com.example.onlinestoretesttaskavito.domain.models.user.UserRegistrationModel
+import com.example.onlinestoretesttaskavito.domain.results.ErrorMessageProvider
+import com.example.onlinestoretesttaskavito.domain.results.ResultRequest
+import com.example.onlinestoretesttaskavito.domain.usecases.registration.RegistrationUseCase
+import com.example.onlinestoretesttaskavito.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
 
-class RegistrationViewModel : ViewModel() {
-    var state by mutableStateOf(RegistrationState())
-        private set
+class RegistrationViewModel(
+    private val registrationUseCase: RegistrationUseCase,
+    private val errorMessageProvider: ErrorMessageProvider
+) :
+    BaseViewModel<RegistrationState, RegistrationViewAction>(InitialRegistrationState) {
+    override fun onAction(action: RegistrationViewAction) =
+        when (action) {
+            is RegistrationViewAction.UpdateName -> onUpdateName(action.name)
+            is RegistrationViewAction.UpdateEmail -> onUpdateEmail(action.email)
+            is RegistrationViewAction.UpdatePassword -> onUpdatePassword(action.password)
+            is RegistrationViewAction.UpdateConfirmPassword -> onUpdateConfirmPassword(action.confirmPassword)
+            is RegistrationViewAction.Registration -> onRegistration()
+            is RegistrationViewAction.DismissError -> onDismissError()
+        }
 
-    fun updateName(name: String) {
-        state = state.copy(fullName = name)
-        buttonEnabled()
+    private fun onUpdateName(name: String) = reduceState {
+        it.copy(
+            name = name,
+            errorName = name.isEmpty(),
+            buttonEnabled = validateFields(name, it.email, it.password, it.confirmPassword)
+        )
     }
 
-    fun updateEmail(email: String) {
-        state = state.copy(
+    private fun onUpdateEmail(email: String) = reduceState {
+        it.copy(
             email = email,
-            errorEmail = !emailValidate(email)
+            errorEmail = email.isEmpty() || !validateEmail(email),
+            buttonEnabled = validateFields(it.name, email, it.password, it.confirmPassword)
         )
-        buttonEnabled()
     }
 
-    fun updatePassword(password: String) {
-        state = state.copy(password = password)
-        buttonEnabled()
+    private fun onUpdatePassword(password: String) = reduceState {
+        it.copy(
+            password = password,
+            errorPassword = password.isEmpty(),
+            errorConfirmPassword = passwordMismatch(password, it.confirmPassword),
+            buttonEnabled = validateFields(it.name, it.email, password, it.confirmPassword)
+        )
     }
 
-    fun updateConfirmPassword(confirmPassword: String) {
-        state = state.copy(
+    private fun onUpdateConfirmPassword(confirmPassword: String) = reduceState {
+        it.copy(
             confirmPassword = confirmPassword,
-            errorConfirmPassword = passwordValidate(state.password, confirmPassword)
+            errorConfirmPassword = passwordMismatch(it.password, confirmPassword),
+            buttonEnabled = validateFields(it.name, it.email, it.password, confirmPassword)
         )
-        buttonEnabled()
     }
 
-    private fun emailValidate(email: String): Boolean {
+
+    private fun onDismissError() = reduceState {
+        it.copy(error = null)
+    }
+
+
+    private fun onRegistration() {
+        reduceState { it.copy(isLoading = true, isNavigate = false) }
+
+        val userRegistrationModel = UserRegistrationModel(
+            name = state.value.name,
+            email = state.value.email,
+            password = state.value.password,
+            cpassword = state.value.confirmPassword
+        )
+
+        viewModelScope.launch {
+            when (val result = registrationUseCase.execute(userRegistrationModel)) {
+                is ResultRequest.Success -> {
+                    // Обновление состояния после успешного логина
+                    reduceState {
+                        it.copy(isLoading = false, error = null, isNavigate = true)
+                    }
+                }
+
+                is ResultRequest.Error -> {
+                    // Обработка ошибки
+                    Log.d("12345q", "Reg. failed: ${result.exception.message}")
+                    reduceState {
+                        it.copy(
+                            isLoading = false,
+                            error = result.getErrorMessage(errorMessageProvider),
+                            isNavigate = false
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    // Валидация email
+    private fun validateEmail(email: String): Boolean {
         val regex = Regex("""([a-z0-9]+)@([a-z0-9]{3,})\.([a-z]{2,3})""")
         return regex.matches(email)
     }
 
-    private fun passwordValidate(password: String, confirmPassword: String): Boolean {
+    // Проверка совпадения паролей
+    private fun passwordMismatch(password: String, confirmPassword: String): Boolean {
         return password != confirmPassword
     }
 
-    private fun buttonEnabled() {
-        state =
-            if (state.fullName.isNotEmpty() &&
-                state.email.isNotEmpty() &&
-                state.password.isNotEmpty() &&
-                state.confirmPassword.isNotEmpty() &&
-                !state.errorConfirmPassword &&
-                !state.errorEmail
-            ) {
-                state.copy(
-                    buttonEnabled = true
-                )
-            } else {
-                state.copy(
-                    buttonEnabled = false
-                )
-            }
-    }
-
-//    fun signUp() {
-//        state = state.copy(
-//            isLoading = true
-//        )
-//        viewModelScope.launch {
-//            try {
-//                registrationUseCase.execute(
-//                    User(
-//                        name = state.fullName,
-//                        phoneNumber = state.phoneNumber,
-//                        email = state.email,
-//                        password = state.password
-//                    )
-//                )
-//                state = state.copy(
-//                    isLoading = false,
-//                    error = "true"
-//                )
-//            } catch (e: Exception) {
-//                state = state.copy(
-//                    isLoading = false,
-//                    error = e.message?.substringBefore('.') ?: "An error occurred"
-//                )
-//            }
-//
-//        }
-//
-//    }
-
-    fun dismissError() {
-        state = state.copy(
-            error = null
-        )
+    // Общая валидация полей (чтобы все поля были непустыми)
+    private fun validateFields(
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        return name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()
     }
 }
 
-data class RegistrationState(
-    val error: String? = null,
-    val isLoading: Boolean = false,
-    val fullName: String = "",
-    val email: String = "",
-    val errorEmail: Boolean = false,
-    val password: String = "",
-    val confirmPassword: String = "",
-    val errorConfirmPassword: Boolean = false,
-    val buttonEnabled: Boolean = false
-)
+

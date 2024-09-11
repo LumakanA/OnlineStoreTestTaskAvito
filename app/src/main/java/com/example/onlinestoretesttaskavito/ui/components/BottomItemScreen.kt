@@ -10,13 +10,29 @@ enum class BottomItemScreen(
     @DrawableRes val icon: Int,
     val route: String,
 ) {
-    SEARCH(title = R.string.search, R.drawable.search_icon, TODO()),
-    FAVORITES(title = R.string.favorites, R.drawable.favorites_icon, TODO()),
-    ADS(title = R.string.ads, R.drawable.ads_icon, TODO()),
-    MESSAGES(title = R.string.messages, R.drawable.messages_icon, TODO()),
+    SEARCH(
+        title = R.string.search,
+        R.drawable.search_icon,
+        ScreenRouts.RegistrationScreen.route
+    ),
+    FAVORITES(
+        title = R.string.favorites,
+        R.drawable.favorites_icon,
+        ScreenRouts.RegistrationScreen.route
+    ),
+    ADS(
+        title = R.string.ads,
+        R.drawable.ads_icon,
+        ScreenRouts.RegistrationScreen.route
+    ),
+    MESSAGES(
+        title = R.string.messages,
+        R.drawable.messages_icon,
+        ScreenRouts.RegistrationScreen.route
+    ),
     PROFILE(
         title = R.string.profile,
         R.drawable.profile_icon,
-        ScreenRouts.RegistrationScreen.route
+        ScreenRouts.LoginScreen.route
     ),
 }

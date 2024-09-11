@@ -13,4 +13,12 @@
     <string name="login">Войти</string>
     <string name="phone_or_email">Телефон или почта</string>
     <string name="log">Вход</string>
+    <string name="error_bad_request">Invalid request. Please check the data you are entering.</string>
+    <string name="error_unauthorized">Unauthorized access. Please check your credentials.</string>
+    <string name="error_forbidden">Forbidden. You don\'t have permission to access this resource.</string>
+    <string name="error_not_found">Resource not found. Please check the URL.</string>
+    <string name="error_conflict">Conflict. There seems to be an issue with your request.</string>
+    <string name="error_http_generic">HTTP error: %1$s</string>
+    <string name="an_error_occurred">An error occurred</string>
+    <string name="ok">OK</string>
 </resources>

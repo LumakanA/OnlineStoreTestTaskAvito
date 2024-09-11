@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -23,7 +22,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -44,32 +44,49 @@ import com.example.onlinestoretesttaskavito.ui.theme.LightGrayColor
 import com.example.onlinestoretesttaskavito.ui.theme.LightGrayColorMenu
 import com.example.onlinestoretesttaskavito.ui.theme.White
 import com.example.onlinestoretesttaskavito.ui.theme.defaultTextStyle
+import org.koin.androidx.compose.koinViewModel
 
 private val DefaultStartPadding = 25.dp
 private val DefaultTopTextPadding = 20.dp
+
 
 @Composable
 fun RegistrationScreen(
     vm: RegistrationViewModel,
     navController: NavController
 ) {
-    val state = vm.state
+
+    val state by vm.state.collectAsState()
+
+    RegistrationContent(
+        state = state,
+        onAction = vm::onAction,
+        navController = navController
+    )
+}
+
+@Composable
+fun RegistrationContent(
+    state: RegistrationState,
+    onAction: (RegistrationViewAction) -> Unit = {},
+    navController: NavController
+) {
     val bottomItems = BottomItemScreen.entries.toTypedArray()
 
-    LaunchedEffect(state.error) {
-        if (state.error == "true") {
-            navController.navigate(ScreenRouts.RegistrationScreen.route)
+    LaunchedEffect(state.isNavigate) {
+        if (state.isNavigate) {
+            navController.navigate(ScreenRouts.LoginScreen.route)
         }
     }
 
-    if (state.error != null && state.error != "true") {
+    if (state.error != null) {
         AlertDialog(
-            onDismissRequest = { vm.dismissError() },
-            title = { Text(text = "An error occurred") },
-            text = { Text(text = state.error.toString()) },
+            onDismissRequest = { onAction(RegistrationViewAction.DismissError) },
+            title = { Text(text = stringResource(R.string.an_error_occurred)) },
+            text = { Text(text = state.error) },
             confirmButton = {
-                Button(onClick = { vm.dismissError() }) {
-                    Text(text = "Ok")
+                Button(onClick = { onAction(RegistrationViewAction.DismissError) }) {
+                    Text(text = stringResource(R.string.ok))
                 }
             }
         )
@@ -115,89 +132,86 @@ fun RegistrationScreen(
             }
         }
     ) { containerPadding ->
-        if (!state.isLoading) {
-            Box(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackgroundColor)
+                .padding(containerPadding)
+        ) {
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(BackgroundColor)
-                    .padding(containerPadding)
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .padding(start = DefaultStartPadding, end = DefaultStartPadding)
+                    .verticalScroll(rememberScrollState())
             ) {
-                Column(
+                Text(
+                    modifier = Modifier.padding(top = 50.dp),
+                    text = stringResource(R.string.registration),
+                    style = defaultTextStyle.textStyle4.copy(color = White),
+                )
+                AppTextField(
                     modifier = Modifier
-                        .fillMaxHeight()
                         .fillMaxWidth()
-                        .padding(start = DefaultStartPadding, end = DefaultStartPadding)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Text(
-                        modifier = Modifier.padding(top = 50.dp),
-                        text = stringResource(R.string.registration),
-                        style = defaultTextStyle.textStyle4.copy(color = White),
-                    )
-                    AppTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 80.dp),
-                        value = state.fullName,
-                        onValueChange = { newName ->
-                            vm.updateName(newName)
-                        },
-                        hintText = stringResource(R.string.name),
-                    )
-                    AppTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = DefaultTopTextPadding),
-                        value = state.email,
-                        onValueChange = { newEmail ->
-                            vm.updateEmail(newEmail)
-                        },
-                        hintText = stringResource(R.string.email),
-                    )
-                    AppTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = DefaultTopTextPadding),
-                        value = state.password,
-                        onValueChange = { newPassword ->
-                            vm.updatePassword(newPassword)
-                        },
-                        hintText = stringResource(R.string.password),
-                    )
-                    AppTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = DefaultTopTextPadding),
-                        value = state.confirmPassword,
-                        onValueChange = { newConfirmPassword ->
-                            vm.updateConfirmPassword(newConfirmPassword)
-                        },
-                        hintText = stringResource(R.string.confirm_password),
-                    )
+                        .padding(top = 80.dp),
+                    value = state.name,
+                    onValueChange = {
+                        onAction(RegistrationViewAction.UpdateName(it))
+                    },
+                    hintText = stringResource(R.string.name),
+                    isError = state.errorName
+                )
+                AppTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = DefaultTopTextPadding),
+                    value = state.email,
+                    onValueChange = {
+                        onAction(RegistrationViewAction.UpdateEmail(it))
+                    },
+                    hintText = stringResource(R.string.email),
+                    isError = state.errorEmail
+                )
+                AppTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = DefaultTopTextPadding),
+                    value = state.password,
+                    onValueChange = {
+                        onAction(RegistrationViewAction.UpdatePassword(it))
+                    },
+                    hintText = stringResource(R.string.password),
+                    isPassword = true,
+                    isPasswordHideButtonVisible = false,
+                    isError = state.errorPassword
+                )
+                AppTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = DefaultTopTextPadding),
+                    value = state.confirmPassword,
+                    onValueChange = {
+                        onAction(RegistrationViewAction.UpdateConfirmPassword(it))
+                    },
+                    hintText = stringResource(R.string.confirm_password),
+                    isPassword = true,
+                    isPasswordHideButtonVisible = false,
+                    isError = state.errorConfirmPassword
+                )
 
-                    Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
 
-                    AppButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 70.dp),
-                        text = stringResource(R.string.login),
-                        buttonEnabled = state.buttonEnabled,
-                        onClick = {
-                            //     if (state.buttonEnabled) vm.signUp()
-                        }
-                    )
-                }
-            }
-
-        } else {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
-                CircularProgressIndicator()
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 70.dp),
+                    text = stringResource(R.string.login),
+                    onClick = {
+                        onAction(RegistrationViewAction.Registration)
+                    },
+                    loading = state.isLoading,
+                    enabled = state.buttonEnabled
+                )
             }
         }
     }
@@ -208,7 +222,7 @@ fun RegistrationScreen(
 @Composable
 private fun RegistrationScreenPreview() {
     RegistrationScreen(
-        vm = RegistrationViewModel(),
+        vm = koinViewModel(),
         navController = rememberNavController()
     )
 }

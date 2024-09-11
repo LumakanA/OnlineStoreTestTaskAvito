@@ -39,7 +39,8 @@ fun AppTextField(
     isError: Boolean = false,
     isPassword: Boolean = false,
     hintText: String = "",
-    backgroundColor: Color = LightGrayColor
+    backgroundColor: Color = LightGrayColor,
+    isPasswordHideButtonVisible: Boolean = isPassword
 ) {
     val borderColor by remember { mutableStateOf(getBorderColor(isError)) }
     val textColor by remember { mutableStateOf(getTextColor(isError)) }
@@ -55,7 +56,7 @@ fun AppTextField(
             .background(
                 backgroundColor,
                 RoundedCornerShape(8.dp)
-            ), // Добавляем цвет фона и округленные углы,
+            ),
         singleLine = true,
         decorationBox = { innerTextField ->
             Box(
@@ -67,7 +68,7 @@ fun AppTextField(
                     text = if (value.isEmpty()) hintText else "",
                     style = defaultTextStyle.textStyle5.copy(color = textHintColor),
                 )
-                if (isPassword) {
+                if (isPasswordHideButtonVisible) {
                     Image(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)

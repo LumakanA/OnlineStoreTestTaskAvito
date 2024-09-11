@@ -1,43 +1,72 @@
 package com.example.onlinestoretesttaskavito.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.onlinestoretesttaskavito.ui.theme.Black
 import com.example.onlinestoretesttaskavito.ui.theme.ButtonColorBlue
 import com.example.onlinestoretesttaskavito.ui.theme.White
+import com.example.onlinestoretesttaskavito.ui.theme.defaultRoundings
 import com.example.onlinestoretesttaskavito.ui.theme.defaultTextStyle
+
+private val DefaultContainerHeight = 46.dp
+
+private val DefaultProgressIndicatorSize = 18.dp
+private val DefaultProgressIndicatorStrokeWidth = 2.dp
 
 @Composable
 fun AppButton(
-    modifier: Modifier = Modifier,
-    modifierText: Modifier = Modifier,
-    backgroundColor: Color = ButtonColorBlue,
     text: String,
-    textStyle: TextStyle = defaultTextStyle.textButton2,
-    buttonEnabled: Boolean = true,
-    onClick: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    loading: Boolean = false,
+    onClick: () -> Unit = {},
+    enabled: Boolean = true,
+    backgroundColor: Color = ButtonColorBlue,
+    contentColor: Color = Black
 ) {
-    Button(
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-        onClick = onClick,
-        shape = RoundedCornerShape(CornerSize(10.dp))
+    Box(
+        modifier = modifier
+            .clip(defaultRoundings.large)
+            .background(backgroundColor)
+            .height(DefaultContainerHeight)
+            .clickable(enabled = enabled) {
+                if (enabled) {
+                    onClick()
+                }
+            }
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        BasicText(
-            modifier = modifierText.padding(horizontal = 8.dp, vertical = 4.dp),
-            text = text,
-            style = textStyle.copy(color = Black),
-        )
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(DefaultProgressIndicatorSize),
+                color = contentColor,
+                strokeWidth = DefaultProgressIndicatorStrokeWidth
+            )
+        } else {
+            BasicText(
+                text = text,
+                style = defaultTextStyle.textButton2.copy(
+                    color = contentColor
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -64,7 +93,7 @@ private fun AppButtonPreview2() {
 private fun AppButtonPreview3() {
     AppButton(
         text = "text",
-        buttonEnabled = false
+        enabled = false
     )
 }
 
@@ -74,6 +103,6 @@ private fun AppButtonPreview4() {
     AppButton(
         text = "text",
         backgroundColor = White,
-        buttonEnabled = false
+        enabled = false
     )
 }

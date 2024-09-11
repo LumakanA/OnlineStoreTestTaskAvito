@@ -52,9 +52,10 @@ android {
 }
 
 dependencies {
-    // Dagger
-    implementation("com.google.dagger:dagger:2.48")
-    kapt("com.google.dagger:dagger-compiler:2.48")
+    //Koin
+    implementation("io.insert-koin:koin-core:3.4.3")
+    implementation("io.insert-koin:koin-android:3.4.3")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.6")
 
     // Room (for database)
     val room_version = "2.6.1"
@@ -99,4 +100,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
