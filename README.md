@@ -21,7 +21,7 @@ OnlineStoreTestTaskAvito — это тестовое Android-приложени�
 1. **Клонирование репозитория**
 
     ```bash
-    git clone https://github.com/yourusername/TestTaskAvito.git
+    git clone https://github.com/LumakanA/OnlineStoreTestTaskAvito.git
     ```
 
 2. **Открытие проекта**
