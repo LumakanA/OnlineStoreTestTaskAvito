@@ -24,13 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.onlinestoretesttaskavito.domain.response.products.Product
+import com.example.onlinestoretesttaskavito.domain.response.products.Products
 import com.example.onlinestoretesttaskavito.ui.theme.BackgroundColor
 import com.example.onlinestoretesttaskavito.ui.theme.White
 
 @Composable
 fun ProductCard(
-    product: Product,
+    products: Products,
     onClick: () -> Unit
 ) {
     Column(
@@ -41,7 +41,7 @@ fun ProductCard(
         horizontalAlignment = Alignment.Start
     ) {
         Image(
-            painter = rememberAsyncImagePainter(product.images.firstOrNull()),
+            painter = rememberAsyncImagePainter(products.images.firstOrNull()),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -53,7 +53,7 @@ fun ProductCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = product.name,
+            text = products.name,
             style = TextStyle(
                 color = White,
                 fontSize = 16.sp,
@@ -66,7 +66,7 @@ fun ProductCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "${product.discountedPrice.toInt()} ₽",
+            text = "${products.discountedPrice.toInt()} ₽",
             style = TextStyle(
                 color = White,
                 fontSize = 18.sp,
@@ -77,7 +77,7 @@ fun ProductCard(
         Spacer(modifier = Modifier.width(4.dp))
 
         Text(
-            text = "${product.price.toInt()} ₽",
+            text = "${products.price.toInt()} ₽",
             style = TextStyle(
                 color = White,
                 fontSize = 14.sp,
@@ -91,9 +91,9 @@ fun ProductCard(
 @Composable
 fun PreviewProductCard() {
     ProductCard(
-        product = Product(
+        products = Products(
             id = "1",
-            name = "Sample Product",
+            name = "Sample Products",
             category = listOf("Category 1", "Category 2"),
             price = 2000.0,
             discountedPrice = 1500.0,

@@ -1,12 +1,12 @@
 package com.example.onlinestoretesttaskavito.ui.screen.productList
 
-import com.example.onlinestoretesttaskavito.domain.response.products.Product
+import com.example.onlinestoretesttaskavito.domain.response.products.Products
 
 data class ProductListState(
-    val products: List<Product>,
+    val products: List<Products>,
     val error: String?,
     val isLoading: Boolean,
-    val selectedCategory: String?
+    val selectedCategory: String?,
 )
 
 val InitialProductListState = ProductListState(

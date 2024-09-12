@@ -5,6 +5,7 @@ import com.example.onlinestoretesttaskavito.data.KeyValueStorage
 import com.example.onlinestoretesttaskavito.domain.models.user.UserLoginModel
 import com.example.onlinestoretesttaskavito.domain.models.user.UserRegistrationModel
 import com.example.onlinestoretesttaskavito.domain.response.login.LoginResponse
+import com.example.onlinestoretesttaskavito.domain.response.products.ProductResponse
 import com.example.onlinestoretesttaskavito.domain.response.products.ProductsResponse
 import com.example.onlinestoretesttaskavito.domain.response.registration.RegistrationResponse
 import retrofit2.Retrofit
@@ -59,5 +60,9 @@ class OnlineStoreRepositoryImp(
         )
 
         return response
+    }
+
+    override suspend fun getProductById(id: String): ProductResponse {
+        return api.getProductById(id)
     }
 }

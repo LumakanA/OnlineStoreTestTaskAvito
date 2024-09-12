@@ -11,6 +11,7 @@ data class AppTextStyles(
     val textStyle2: TextStyle,
     val textStyle3: TextStyle,
     val bodyRegular12: TextStyle,
+    val bodyRegular14: TextStyle,
     val bodyMedium12: TextStyle,
     val textStyle4: TextStyle,
     val bodyMedium14: TextStyle,
@@ -35,6 +36,11 @@ val defaultTextStyle = AppTextStyles(
     ),
     bodyRegular12 = TextStyle(
         fontSize = 12.sp,
+        lineHeight = 16.sp,
+        fontFamily = FontFamily(Font(R.font.roboto_400))
+    ),
+    bodyRegular14 = TextStyle(
+        fontSize = 14.sp,
         lineHeight = 16.sp,
         fontFamily = FontFamily(Font(R.font.roboto_400))
     ),

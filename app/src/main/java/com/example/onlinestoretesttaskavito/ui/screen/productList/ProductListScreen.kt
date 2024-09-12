@@ -44,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.onlinestoretesttaskavito.R
 import com.example.onlinestoretesttaskavito.ui.components.CategoriesCard
 import com.example.onlinestoretesttaskavito.ui.components.ProductCard
+import com.example.onlinestoretesttaskavito.ui.navigation.ProductNavigation
 import com.example.onlinestoretesttaskavito.ui.theme.BackgroundColor
 import com.example.onlinestoretesttaskavito.ui.theme.Black
 import com.example.onlinestoretesttaskavito.ui.theme.White
@@ -73,6 +74,12 @@ fun ProductListContent(
     onAction: (ProductListViewAction) -> Unit = {},
     navController: NavController
 ) {
+    val categoryMapping = mapOf(
+        "clothing" to "Одежда",
+        "furniture" to "Мебель",
+        "footwear" to "Обувь"
+    )
+
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var itemsPerPage by remember { mutableIntStateOf(10) }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
@@ -130,8 +137,9 @@ fun ProductListContent(
                                 .fillMaxWidth()
                         ) {
                             items(categories) { category ->
+                                val categoryName = categoryMapping[category] ?: category
                                 CategoriesCard(
-                                    categoryName = category,
+                                    categoryName = categoryName,
                                     onClick = {
                                         selectedCategory = category
                                         onAction(ProductListViewAction.FilterByCategory(category))
@@ -173,7 +181,8 @@ fun ProductListContent(
                         RecommendationsContent(
                             state = state,
                             itemsPerPage = itemsPerPage,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            navController = navController
                         )
 
                         ShowPerOptions(
@@ -189,7 +198,12 @@ fun ProductListContent(
 
 
 @Composable
-fun RecommendationsContent(state: ProductListState, itemsPerPage: Int, modifier: Modifier) {
+fun RecommendationsContent(
+    state: ProductListState,
+    itemsPerPage: Int,
+    modifier: Modifier,
+    navController: NavController
+) {
     val gridState = rememberLazyGridState()
 
     LazyVerticalGrid(
@@ -205,9 +219,9 @@ fun RecommendationsContent(state: ProductListState, itemsPerPage: Int, modifier:
     ) {
         items(state.products.take(itemsPerPage)) { product ->
             ProductCard(
-                product = product,
+                products = product,
                 onClick = {
-                    //        navController.navigate("productDetails/${product.id}")
+                    navController.navigate(route = ProductNavigation(id = product.id))
                 }
             )
         }

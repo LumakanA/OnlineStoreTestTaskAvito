@@ -1,16 +1,16 @@
-package com.example.onlinestoretesttaskavito.domain.usecases.products
+package com.example.onlinestoretesttaskavito.domain.usecases.product
 
 import com.example.onlinestoretesttaskavito.data.repository.OnlineStoreRepository
-import com.example.onlinestoretesttaskavito.domain.response.products.Products
+import com.example.onlinestoretesttaskavito.domain.response.products.Product
 import com.example.onlinestoretesttaskavito.domain.results.ResultRequest
 import retrofit2.HttpException
 
-class GetAllProductsUseCase(
+class GetProductByIdUseCase(
     private val repository: OnlineStoreRepository
 ) {
-    suspend fun execute(): ResultRequest<List<Products>> {
+    suspend fun execute(productId: String): ResultRequest<Product> {
         return try {
-            val response = repository.getAllProducts()
+            val response = repository.getProductById(productId)
             ResultRequest.Success(response.data)
         } catch (e: HttpException) {
             ResultRequest.Error(e)

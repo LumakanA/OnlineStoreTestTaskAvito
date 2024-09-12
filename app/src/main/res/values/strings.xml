@@ -30,4 +30,7 @@
     <string name="near_you">Рядом с вами</string>
     <string name="error">Ошибка: %1$s</string>
     <string name="retry">Повторить</string>
+    <string name="no_product_info">Нет информации о продукте</string>
+    <string name="category">Категория: %1$s</string>
+    <string name="specifications">Характеристики</string>
 </resources>
