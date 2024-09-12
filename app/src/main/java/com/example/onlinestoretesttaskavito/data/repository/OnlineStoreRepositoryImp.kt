@@ -2,13 +2,14 @@ package com.example.onlinestoretesttaskavito.data.repository
 
 import android.util.Log
 import com.example.onlinestoretesttaskavito.data.KeyValueStorage
-import com.example.onlinestoretesttaskavito.domain.models.getUsers.UserResponse
 import com.example.onlinestoretesttaskavito.domain.models.user.UserLoginModel
 import com.example.onlinestoretesttaskavito.domain.models.user.UserRegistrationModel
 import com.example.onlinestoretesttaskavito.domain.response.login.LoginResponse
+import com.example.onlinestoretesttaskavito.domain.response.products.ProductsResponse
 import com.example.onlinestoretesttaskavito.domain.response.registration.RegistrationResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Query
 
 private const val repositoryUrl = "https://fakeshopapi-l2ng.onrender.com/app/v1/"
 
@@ -40,13 +41,23 @@ class OnlineStoreRepositoryImp(
         return response
     }
 
+    override suspend fun getAllProducts(@Query(value = "category") category: String?): ProductsResponse {
+        // Логируем начало выполнения запроса
+        Log.d("12345q", "getAllProducts - Fetching products")
 
-    override suspend fun getUsers(): UserResponse {
-        val response = api.getUsers()
+        val response = api.getAllProducts(category)
+
+        // Логируем результат запроса
         Log.d(
             "12345q",
-            "Status: ${response.status}, count: ${response.count}, users: ${response.users}"
+            "getAllProducts - Products: ${response.data}"
         )
+
+        Log.d(
+            "12345q",
+            "getAllProducts - Status: ${response.status}"
+        )
+
         return response
     }
 }

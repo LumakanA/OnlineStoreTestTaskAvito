@@ -1,6 +1,5 @@
 package com.example.onlinestoretesttaskavito.ui.screen.login
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.onlinestoretesttaskavito.domain.models.user.UserLoginModel
 import com.example.onlinestoretesttaskavito.domain.results.ErrorMessageProvider
@@ -59,7 +58,6 @@ class LoginViewModel(
                 }
 
                 is ResultRequest.Error -> {
-                    Log.d("12345q", "Login failed: ${result.exception.message}")
                     reduceState {
                         it.copy(
                             isLoading = false,

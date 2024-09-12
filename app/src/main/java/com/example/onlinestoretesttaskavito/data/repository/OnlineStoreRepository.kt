@@ -1,13 +1,14 @@
 package com.example.onlinestoretesttaskavito.data.repository
 
-import com.example.onlinestoretesttaskavito.domain.models.getUsers.UserResponse
 import com.example.onlinestoretesttaskavito.domain.models.user.UserLoginModel
 import com.example.onlinestoretesttaskavito.domain.models.user.UserRegistrationModel
 import com.example.onlinestoretesttaskavito.domain.response.login.LoginResponse
+import com.example.onlinestoretesttaskavito.domain.response.products.ProductsResponse
 import com.example.onlinestoretesttaskavito.domain.response.registration.RegistrationResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface OnlineStoreRepository {
     // Регистрация пользователя
@@ -18,7 +19,9 @@ interface OnlineStoreRepository {
     @POST("users/auth/login")
     suspend fun loginUser(@Body userLoginModel: UserLoginModel): LoginResponse
 
-    // Получение списка пользователей
-    @GET("users")
-    suspend fun getUsers(): UserResponse
+    // Получение списка продуктов с фильтрацией по категории (если указана)
+    @GET("products")
+    suspend fun getAllProducts(
+        @Query("category") category: String? = null // Добавлен параметр для фильтрации по категории
+    ): ProductsResponse
 }

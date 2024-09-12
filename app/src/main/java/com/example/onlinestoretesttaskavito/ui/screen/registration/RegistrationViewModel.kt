@@ -1,6 +1,5 @@
 package com.example.onlinestoretesttaskavito.ui.screen.registration
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.onlinestoretesttaskavito.domain.models.user.UserRegistrationModel
 import com.example.onlinestoretesttaskavito.domain.results.ErrorMessageProvider
@@ -76,15 +75,12 @@ class RegistrationViewModel(
         viewModelScope.launch {
             when (val result = registrationUseCase.execute(userRegistrationModel)) {
                 is ResultRequest.Success -> {
-                    // Обновление состояния после успешного логина
                     reduceState {
                         it.copy(isLoading = false, error = null, isNavigate = true)
                     }
                 }
 
                 is ResultRequest.Error -> {
-                    // Обработка ошибки
-                    Log.d("12345q", "Reg. failed: ${result.exception.message}")
                     reduceState {
                         it.copy(
                             isLoading = false,

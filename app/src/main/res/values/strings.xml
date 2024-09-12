@@ -25,4 +25,9 @@
     <string name="product_list_screen">Product List Screen</string>
     <string name="empty_screen">Это просто пустой экран. Ничего необычного.</string>
     <string name="back">Назад</string>
+    <string name="recommend">Рекомендации</string>
+    <string name="fresh">Свежее</string>
+    <string name="near_you">Рядом с вами</string>
+    <string name="error">Ошибка: %1$s</string>
+    <string name="retry">Повторить</string>
 </resources>

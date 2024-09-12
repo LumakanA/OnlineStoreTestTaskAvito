@@ -1,15 +1,19 @@
 package com.example.onlinestoretesttaskavito.ui.screen.productList
 
-val InitialProductListState = ProductListState(
-    error = null,
-    isNavigate = false,
-    isLoading = false,
-    buttonEnabled = false
-)
+import com.example.onlinestoretesttaskavito.domain.response.products.Product
 
 data class ProductListState(
+    val products: List<Product>,
     val error: String?,
-    val isNavigate: Boolean,
     val isLoading: Boolean,
-    val buttonEnabled: Boolean
+    val selectedCategory: String?
 )
+
+val InitialProductListState = ProductListState(
+    products = emptyList(),
+    error = null,
+    isLoading = false,
+    selectedCategory = null
+)
+
+

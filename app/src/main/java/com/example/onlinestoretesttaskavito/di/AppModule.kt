@@ -5,6 +5,8 @@ import com.example.onlinestoretesttaskavito.data.repository.OnlineStoreRepositor
 import com.example.onlinestoretesttaskavito.data.repository.OnlineStoreRepositoryImp
 import com.example.onlinestoretesttaskavito.domain.results.ErrorMessageProvider
 import com.example.onlinestoretesttaskavito.domain.usecases.login.LoginUseCase
+import com.example.onlinestoretesttaskavito.domain.usecases.products.GetAllProductsUseCase
+import com.example.onlinestoretesttaskavito.domain.usecases.products.GetFilterProductsUseCase
 import com.example.onlinestoretesttaskavito.domain.usecases.registration.RegistrationUseCase
 import com.example.onlinestoretesttaskavito.ui.screen.login.LoginViewModel
 import com.example.onlinestoretesttaskavito.ui.screen.productList.ProductListViewModel
@@ -29,6 +31,12 @@ val appModule = module {
     factory {
         LoginUseCase(get())
     }
+    factory {
+        GetAllProductsUseCase(get())
+    }
+    factory {
+        GetFilterProductsUseCase(get())
+    }
     viewModel {
         RegistrationViewModel(get(), get())
     }
@@ -36,6 +44,6 @@ val appModule = module {
         LoginViewModel(get(), get())
     }
     viewModel {
-        ProductListViewModel()
+        ProductListViewModel(get(), get())
     }
 }
