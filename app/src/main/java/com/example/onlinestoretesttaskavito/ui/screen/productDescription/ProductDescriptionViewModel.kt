@@ -1,6 +1,5 @@
 package com.example.onlinestoretesttaskavito.ui.screen.productDescription
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.onlinestoretesttaskavito.domain.results.ResultRequest
 import com.example.onlinestoretesttaskavito.domain.usecases.product.GetProductByIdUseCase
@@ -25,7 +24,6 @@ class ProductDescriptionViewModel(
             when (val result = getProductByIdUseCase.execute(id)) {
                 is ResultRequest.Success -> {
                     val products = result.data
-                    Log.d("12345q", "1")
                     reduceState {
                         it.copy(isLoading = false, product = products, error = null)
                     }

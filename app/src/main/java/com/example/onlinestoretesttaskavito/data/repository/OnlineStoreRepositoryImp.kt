@@ -1,6 +1,5 @@
 package com.example.onlinestoretesttaskavito.data.repository
 
-import android.util.Log
 import com.example.onlinestoretesttaskavito.data.KeyValueStorage
 import com.example.onlinestoretesttaskavito.domain.models.user.UserLoginModel
 import com.example.onlinestoretesttaskavito.domain.models.user.UserRegistrationModel
@@ -27,39 +26,17 @@ class OnlineStoreRepositoryImp(
     }
 
     override suspend fun registerUser(userRegistrationModel: UserRegistrationModel): RegistrationResponse {
-        val response = api.registerUser(userRegistrationModel)
-        Log.d(
-            "12345q",
-            "Status: ${response.status}, count: ${response.count}, dataProduct: ${response.dataProduct}"
-        )
-        return response
+        return api.registerUser(userRegistrationModel)
     }
 
     override suspend fun loginUser(userLoginModel: UserLoginModel): LoginResponse {
         val response = api.loginUser(userLoginModel)
         storage.accessToken = response.token
-        Log.d("12345q", "Status: ${response.status}, Token: ${response.token}")
         return response
     }
 
     override suspend fun getAllProducts(@Query(value = "category") category: String?): ProductsResponse {
-        // Логируем начало выполнения запроса
-        Log.d("12345q", "getAllProducts - Fetching products")
-
-        val response = api.getAllProducts(category)
-
-        // Логируем результат запроса
-        Log.d(
-            "12345q",
-            "getAllProducts - Products: ${response.data}"
-        )
-
-        Log.d(
-            "12345q",
-            "getAllProducts - Status: ${response.status}"
-        )
-
-        return response
+        return api.getAllProducts(category)
     }
 
     override suspend fun getProductById(id: String): ProductResponse {
