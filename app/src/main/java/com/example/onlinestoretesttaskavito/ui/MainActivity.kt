@@ -20,8 +20,12 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             OnlineStoreTestTaskAvitoTheme {
                 NavGraph(
-                    navHostController = navController, startScreen =
-                    ScreenRouts.RegistrationScreen.route
+                    navHostController = navController,
+                    startScreen = if (storage.accessToken == null) {
+                        ScreenRouts.RegistrationScreen.route
+                    } else {
+                        ScreenRouts.ProductListScreen.route
+                    }
                 )
             }
         }

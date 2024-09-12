@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.onlinestoretesttaskavito.ui.screen.empty.EmptyScreen
 import com.example.onlinestoretesttaskavito.ui.screen.login.LoginScreen
+import com.example.onlinestoretesttaskavito.ui.screen.productList.ProductListScreen
 import com.example.onlinestoretesttaskavito.ui.screen.registration.RegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -22,6 +24,12 @@ fun NavGraph(
         }
         composable(ScreenRouts.LoginScreen.route) {
             LoginScreen(vm = koinViewModel(), navController = navHostController)
+        }
+        composable(ScreenRouts.ProductListScreen.route) {
+            ProductListScreen(vm = koinViewModel(), navController = navHostController)
+        }
+        composable(ScreenRouts.EmptyScreen.route) {
+            EmptyScreen(navController = navHostController)
         }
     }
 }

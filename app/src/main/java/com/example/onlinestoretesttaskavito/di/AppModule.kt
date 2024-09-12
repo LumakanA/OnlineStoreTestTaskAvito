@@ -7,6 +7,7 @@ import com.example.onlinestoretesttaskavito.domain.results.ErrorMessageProvider
 import com.example.onlinestoretesttaskavito.domain.usecases.login.LoginUseCase
 import com.example.onlinestoretesttaskavito.domain.usecases.registration.RegistrationUseCase
 import com.example.onlinestoretesttaskavito.ui.screen.login.LoginViewModel
+import com.example.onlinestoretesttaskavito.ui.screen.productList.ProductListViewModel
 import com.example.onlinestoretesttaskavito.ui.screen.registration.RegistrationViewModel
 import com.example.onlinestoretesttaskavito.utils.ErrorMessageProviderImp
 import org.koin.android.ext.koin.androidContext
@@ -33,5 +34,8 @@ val appModule = module {
     }
     viewModel {
         LoginViewModel(get(), get())
+    }
+    viewModel {
+        ProductListViewModel()
     }
 }

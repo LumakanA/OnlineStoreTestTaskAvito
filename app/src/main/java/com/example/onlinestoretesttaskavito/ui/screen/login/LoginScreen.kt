@@ -61,7 +61,7 @@ fun LoginContent(
 
     LaunchedEffect(state.isNavigate) {
         if (state.isNavigate) {
-            navController.navigate(ScreenRouts.RegistrationScreen.route)
+            navController.navigate(ScreenRouts.ProductListScreen.route)
         }
     }
 

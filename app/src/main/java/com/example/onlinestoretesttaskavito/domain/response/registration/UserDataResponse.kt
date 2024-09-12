@@ -2,7 +2,7 @@ package com.example.onlinestoretesttaskavito.domain.response.registration
 
 import com.google.gson.annotations.SerializedName
 
-data class UserDataResponse (
+data class UserDataResponse(
     @SerializedName("_id")
     val id: String,
     val name: String,

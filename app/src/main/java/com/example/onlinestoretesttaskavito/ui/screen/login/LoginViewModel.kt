@@ -53,14 +53,12 @@ class LoginViewModel(
         viewModelScope.launch {
             when (val result = loginUseCase.execute(userLoginModel)) {
                 is ResultRequest.Success -> {
-                    // Обновление состояния после успешного логина
                     reduceState {
                         it.copy(isLoading = false, error = null, isNavigate = true)
                     }
                 }
 
                 is ResultRequest.Error -> {
-                    // Обработка ошибки
                     Log.d("12345q", "Login failed: ${result.exception.message}")
                     reduceState {
                         it.copy(

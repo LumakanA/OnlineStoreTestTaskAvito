@@ -13,26 +13,26 @@ enum class BottomItemScreen(
     SEARCH(
         title = R.string.search,
         R.drawable.search_icon,
-        ScreenRouts.RegistrationScreen.route
+        ScreenRouts.ProductListScreen.route
     ),
     FAVORITES(
         title = R.string.favorites,
         R.drawable.favorites_icon,
-        ScreenRouts.RegistrationScreen.route
+        ScreenRouts.EmptyScreen.route
     ),
     ADS(
         title = R.string.ads,
         R.drawable.ads_icon,
-        ScreenRouts.RegistrationScreen.route
+        ScreenRouts.EmptyScreen.route
     ),
     MESSAGES(
         title = R.string.messages,
         R.drawable.messages_icon,
-        ScreenRouts.RegistrationScreen.route
+        ScreenRouts.EmptyScreen.route
     ),
     PROFILE(
         title = R.string.profile,
         R.drawable.profile_icon,
-        ScreenRouts.LoginScreen.route
+        ScreenRouts.EmptyScreen.route
     ),
 }

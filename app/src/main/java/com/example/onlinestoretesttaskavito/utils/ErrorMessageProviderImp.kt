@@ -12,7 +12,10 @@ class ErrorMessageProviderImp(private val context: Context) : ErrorMessageProvid
             403 -> context.getString(R.string.error_forbidden)
             404 -> context.getString(R.string.error_not_found)
             409 -> context.getString(R.string.error_conflict)
-            else -> context.getString(R.string.error_http_generic, message ?: "Unknown error")
+            else -> context.getString(
+                R.string.error_http_generic,
+                message ?: context.getString(R.string.unknown_error)
+            )
         }
     }
 }
